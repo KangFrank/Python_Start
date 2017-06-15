@@ -18,3 +18,7 @@ Dictionary_={"Key1":"Value1","Key2":"Value2","Key3":"Value3"}
 #Print the items in a dictionary
 for items in Dictionary_:
      print(items) 
+#For print every key and value in the Dictionary
+#Attention: items() is a attribution of Dic, k v are just two variables
+for key,value in Dictionary_.items():
+    print("%s at %s "%(key,value))
