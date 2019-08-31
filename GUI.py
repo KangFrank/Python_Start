@@ -1,3 +1,6 @@
+from PyInstaller.utils.hooks import collect_submodules
+
+hiddenimports = collect_submodules('encodings')
 from tkinter import *
 class MyWindow:
     def __init__(self, win):
