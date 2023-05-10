@@ -1,10 +1,13 @@
 #-*-: utf-8 
-#Made by Mr. Kang, just for reference
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
 
-#save figure and data in specific path
+"""
+    purpose
+        1. 2005-2017 top 20 game
+        2. analyze data in bar graph
+"""
 data_path = './video_games_sales1.csv'
 output_path = './output'
 if not os.path.exists(output_path):
@@ -14,20 +17,13 @@ def collect_data():
     df_data = pd.read_csv(data_path)
     return df_data
 
-
-
 def process_data(df_data):
     #去除缺失值
-    df_data['NewYear']=0
-    year=[]
-    for i in range(len(df_data['Year'])):
-        if str(df_data.iloc[i]['Year']).split()[0]=='2':
-            df_data.iloc[i]['NewYear']=int(df_data.iloc[i]['Year'])
-    print(df_data['Year'])
-    df_data['Year'].to_csv(os.path.join(output_path,'year.csv'))
+    cln_df_data = df_data.dropna()
+    cln_df_data['Year']=pd.to_numeric(cln_df_data['Year'])
+    #确定时间范围
 
-"""
-    cond = (df_data['Year'] >= 2005) & (df_data['Year'] <= 2017)
+    cond = (cln_df_data['Year'] >= 2005) & (cln_df_data['Year'] <= 2017)
     cln_df_data1 = cln_df_data[cond]
     filtered_data = cln_df_data1.copy()
 
@@ -37,9 +33,8 @@ def process_data(df_data):
     #将销售额小于<5M的厂商过滤掉
     filtered_df_data = filtered_data[filtered_data['Global_sales'] > 5]
 
-    #print("原数据有{}行,处理后的数据有:{}行".format(df_data.shape[0],filtered_data.shape[0]))
     return filtered_df_data
-"""
+
 def analyze_data(filtered_df_data):
     # 全球销量的top20的游戏
 
@@ -61,7 +56,6 @@ def save_and_show_results(top20_games_sales,producer_games_com_sales):
     plt.title('top20 sales')
     plt.tight_layout()
     plt.savefig(os.path.join(output_path,'top20_sales.png'))
-    plt.show()
 
     producer_games_com_sales.plot.bar(stacked = True)
     plt.title('Games Sales Comparison (2005-2017)')
@@ -75,15 +69,18 @@ def main():
     #收集数据
     df_data = collect_data()
 
+    #查看数据基本信息
+    #df_data = inspect_data(df_data)
+
     #数据处理
     filtered_df_data = process_data(df_data)
 
     #分析数据
-    #top20_games_sales,producer_games_com_sales = analyze_data(filtered_df_data)
+    top20_games_sales,producer_games_com_sales = analyze_data(filtered_df_data)
 
 
     #数据保存与可视化
-    #save_and_show_results(top20_games_sales,producer_games_com_sales)
+    save_and_show_results(top20_games_sales,producer_games_com_sales)
 
 
 if __name__ == '__main__':
